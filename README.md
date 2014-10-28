@@ -12,7 +12,13 @@ to put something in a bucket and get a token back:
 
 curl -X POST --data "data=hello" http://tokened.meteor.com/token 
 
+or
+from the browser: tokened.meteor.com/token/?data=hello
+
+Should see a response like:
+{"token":"dKxCtHRvGZGgNMrxj"}
+
 to retrieve a bucket with a token:
 
-curl http://tokened.meteor.com/data/4pkMycAMJjtR49wkW  
+curl http://tokened.meteor.com/data/dKxCtHRvGZGgNMrxj  
 
