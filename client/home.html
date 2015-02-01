@@ -1,0 +1,25 @@
+<head>
+  <title>clerk</title>
+</head>
+
+<template name="home">
+  <h1>Hi, I'm clerk</h1>
+  {{> tokened}}
+  {{> storeSomething}}
+</template>
+
+<template name="tokened">
+  {{#if token}}
+  Your token: {{token}}
+  {{/if}}
+</template>
+
+<template name="storeSomething">
+  <!-- add a form below the h1 -->
+  <form class="new-bucket">
+    <input type="text" size=64 name="text" placeholder="Type what you want to store" />
+  </form>
+<!--
+<button>Store</button>
+-->
+</template>
