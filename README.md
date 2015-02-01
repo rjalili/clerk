@@ -1,24 +1,24 @@
-tokened
+clerk
 =======
 
-Tokened data store
+Clerk stores stuff for anyone and gets it back to whoever has the claim ticket
 
-Use token at tokened.meteor.com to cache data for another app or to give to someone. 
+Use clerk at clerk.meteor.com to cache data for another app or to give to someone. 
 
-All the other app needs is the token you give you provide.
+All the other app needs is the key  you provide.
 
 Usage:
-to put something in a bucket and get a token back:
+to put something in a bucket and get a key back:
 
-curl -X POST --data "data=hello" http://tokened.meteor.com/token 
+curl -X POST --data "data=hello" http://clerk.meteor.com/ 
 
 or
-from the browser: tokened.meteor.com/token/?data=hello
+from the browser: clerk.meteor.com/post/{data=hello}
 
 Should see a response like:
-{"token":"dKxCtHRvGZGgNMrxj"}
+{"key":"dKxCtHRvGZGgNMrxj"}
 
-to retrieve a bucket with a token:
+to retrieve with a key:
 
-curl http://tokened.meteor.com/data/dKxCtHRvGZGgNMrxj  
+curl http://clerk.meteor.com/dKxCtHRvGZGgNMrxj  
 
