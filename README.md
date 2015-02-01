@@ -14,6 +14,7 @@ curl -X POST --data "data=hello" http://clerk.meteor.com/
 
 or
 from the browser: clerk.meteor.com/store/?data=hello
+
 all the parameters sent in are stored and you get back a key that can retrieve them
 
 Should see a response like:
