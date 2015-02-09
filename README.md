@@ -13,7 +13,7 @@ to put something in a bucket and get a key back:
 curl -X POST --data "data=hello" http://clerk.meteor.com/ 
 
 or
-from the browser: clerk.meteor.com/post/{data=hello}
+from the browser: clerk.meteor.com/post/?data=hello
 
 Should see a response like:
 {"key":"dKxCtHRvGZGgNMrxj"}
