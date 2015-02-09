@@ -1,32 +1,45 @@
-Template.tokened.helpers( {
-  token: function() {
-    return Session.get("token");
+Clerk = function(options) {
+  if ( !options ) {
+    options = {
+      "rootURL": "http://clerk.meteor.com",
+      "apiPath": "/"
+    };
   }
-})
 
-// In the client code, right after the helper definition:
-Template.storeSomething.events({
-  "submit .new-bucket": function (event) {
-    // This function is called when the new task form is submitted
+  Template.tokened.helpers( {
+    token: function() {
+      return Session.get("token");
+    }
+  })
 
-    //console.log("foo");
+  // In the client code, right after the helper definition:
+  Template.storeSomething.events({
+    "submit .new-bucket": function (event) {
+      // This function is called when the new task form is submitted
 
-    var text = event.target.text.value;
+      //console.log("foo");
 
-    // call API to get token for data
-    HTTP.call("POST", "/token", 
-          {data: {data: text}},
-          function (error, result) {
-            if (!error) {
-              Session.set("token", result.data.token);
-            }
-          });    
-    
-    
-    // Clear form
-    event.target.text.value = "";
+      var text = event.target.text.value;
 
-    // Prevent default form submit
-    return false;
-  }
-});
+      // call API to get token for data
+      HTTP.call("POST", options.rootURL+options.apiPath, 
+                {data: {data: text}},
+                function (error, result) {
+                  if (!error) {
+                    Session.set("token", result.data.token);
+                  }
+                  alert("storing "+text);
+                });    
+
+
+      // Clear form
+      event.target.text.value = "";
+
+      // Prevent default form submit
+      return false;
+    }
+  });
+}
+
+var clerk = new Clerk();
+
