@@ -1,5 +1,2 @@
-/*
-var options = {};
-var clerkService = new ClerkService(options);
-clerkService.init();
-*/
+Meteor.startup(function () {
+});

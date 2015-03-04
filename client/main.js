@@ -26,7 +26,7 @@ Clerk = function(options) {
                 {data: {data: text}},
                 function (error, result) {
                   if (!error) {
-                    Session.set("token", result.data.token);
+                    Session.set("token", result.data.key);
                   }
                   alert("storing "+text);
                 });    
