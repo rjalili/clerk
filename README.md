@@ -5,7 +5,7 @@ Clerk stores stuff for anyone and gets it back to whoever has the claim ticket
 
 Use clerk at clerk.meteor.com to cache data for another app or to give to someone. 
 
-Items are stored for 1 hour
+Items are stored for 1 hour (that's the intention. For now the database stores items forever)
 
 All the other app needs is the key  you provide.
 
