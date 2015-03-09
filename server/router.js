@@ -125,7 +125,7 @@ ClerkService = function(options) {
       _.extend(dbquery, {"_id":key}); // for mongo      
       //console.log(selector);
       var options = {"upsert":true};
-      if ( Buckets.update(selector,selector, options) > 0 ) {
+      if ( Buckets.update(dbquery,selector, options) > 0 ) {
         result = key;
       }
     }
