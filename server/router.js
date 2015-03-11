@@ -146,7 +146,7 @@ ClerkService = function(options) {
 
     var foundArray = Buckets.find(selector).fetch();
     //console.log(selector);
-    result = {"result": foundArray[0]};
+    result = foundArray[0];
     //result = {"result": this.request.query};
     //result = selector;
     return result;  
