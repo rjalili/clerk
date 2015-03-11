@@ -97,7 +97,7 @@ ClerkService = function(options) {
       var data = {};
 
       if ( _.isObject(this.request.body) ) {
-        _.extend(data, {"bucket":this.request.body});
+        _.extend(data, this.request.body);
       }
       result = clerkService.store(data);
       this.response.writeHead(200, { 
@@ -109,25 +109,27 @@ ClerkService = function(options) {
 
   }
   
-  this.store = function(bucket) {
+  this.store = function(bucketData) {
     var result, selector = {};
     var isAppending = false;
 
-    _.extend(selector,bucket);
+    _.extend(selector,{"bucket":bucketData});
     _.extend(selector, {"version":"0.0.1", // this.version; 
                         "createdAt": new Date()
                        }); 
 
-    if ( bucket.key ) {
-      var key = bucket.key;
+    if ( selector.bucket.key ) {
+      var key = selector.bucket.key;
       isAppending = true;
       var dbquery = {};
       _.extend(dbquery, {"_id":key}); // for mongo      
       _.extend(selector, {"_id":key}); // for mongo      
       //console.log(selector);
-      var options = {"upsert":true};
-      if ( Buckets.update(dbquery,selector, options) > 0 ) {
-        result = key;
+      //var options = {"upsert":true};
+      writeResult = Buckets.upsert(dbquery,selector);
+      
+      if ( (writeResult.numberAffected) > 0 ) { //  + writeResult.nModified) > 0 ) {
+        result = writeResult.insertedId;
       }
     }
     else {
