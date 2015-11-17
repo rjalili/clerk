@@ -5,7 +5,7 @@ ClerkService = function(options) {
     _.extend(this.options, options);
   }
   if ( !this.options.uiPath ) {
-    this.options.uiPath = "/home";
+    this.options.uiPath = "http://clerk-ui.meteor.com/home";
   }  
   if ( !this.options.uiTemplate ) {
     this.options.uiTemplate = "home";
@@ -83,9 +83,11 @@ ClerkService = function(options) {
       }
       else {
         this.response.writeHead(302, {
-          'Location': "https://github.com/rjalili/clerk"
+//          'Location': "https://github.com/rjalili/clerk"
+          'Location': clerkService.options.uiPath //"/info/about"
         });
         this.response.end();
+//        this.redirect("/info/about");
       }
     })
     //
@@ -109,10 +111,65 @@ ClerkService = function(options) {
 
   }
   
+  // check given key for being 17 characters + 8 hash characters that match the accurate hash of the id
+  // use the id to look up the data
+  // if key is not valid, just return {}
+  this.fetch = function(key) {
+    var selector ={};
+    var result = {};  
+    var id_hash = this.parseKey(key);
+    if ( id_hash.id ) {
+      var id = id_hash.id;
+      var hash = id_hash.hash;
+      var correct_hash = this.hash(id);
+      if ( hash == correct_hash ) {
+        _.extend(selector, {"_id":id});    
+
+        var foundArray = Buckets.find(selector).fetch();
+        //console.log(selector);
+        result = foundArray[0];
+        //result = {"result": this.request.query};
+        //result = selector;        
+      }      
+    }
+    return result;  
+  }
+  
+  this.hash = function(id) {
+    var crypto = Npm.require('crypto');
+    var key = 'abc123';
+    var hash = "";
+    var hasher = crypto.createHmac('sha512', key);
+    hasher.update(id);
+    hash = hasher.digest('hex').substr(0,8);
+    console.log(hash);    
+    return hash;
+  }
+
+  this.makeKey = function(id) {
+    var key = id + this.hash(id);
+    console.log("key for id "+id+" is "+key);
+    return key;
+  }
+  
+  // split the key, which must be a string of length 25, into an ID of length 17 and a hash of length 8
+  // the hash is the last 8 characters
+  this.parseKey = function(key) {
+    var id_hash = {"id":undefined,"hash":undefined};
+    console.log("parse key "+key);
+    if ( key.length > 8 ) {
+      id_hash.id= key.substr(0,key.length-8);
+      id_hash.hash = key.substr(-8);
+    }
+    console.log(JSON.stringify(id_hash));
+    return id_hash;
+  }
+  
   this.store = function(bucketData) {
     var result, selector = {};
     var isAppending = false;
-
+    var new_key;
+    
     _.extend(selector,{"bucket":bucketData});
     _.extend(selector, {"version":"0.0.1", // this.version; 
                         "createdAt": new Date()
@@ -120,10 +177,13 @@ ClerkService = function(options) {
 
     if ( selector.bucket.key ) {
       var key = selector.bucket.key;
+      var id_hash = this.parseKey(key);
+      var id = id_hash.id;
+      var hash = id_hash.hash;
       isAppending = true;
       var dbquery = {};
-      _.extend(dbquery, {"_id":key}); // for mongo      
-      _.extend(selector, {"_id":key}); // for mongo      
+      _.extend(dbquery, {"_id":id}); // for mongo      
+      _.extend(selector, {"_id":id}); // for mongo      
       //console.log(selector);
       //var options = {"upsert":true};
       writeResult = Buckets.upsert(dbquery,selector);
@@ -133,26 +193,29 @@ ClerkService = function(options) {
       }
     }
     else {
-      result = Buckets.insert(selector);      
+      id = Buckets.insert(selector);  
+      new_key = this.makeKey(id);
     }
-    result = {"key":result};
+    result = {"key":new_key};
     return result;
   }
-  
-  this.fetch = function(key) {
-    var selector ={};
-    var result = {};  
-    _.extend(selector, {"_id":key});    
 
-    var foundArray = Buckets.find(selector).fetch();
-    //console.log(selector);
-    result = foundArray[0];
-    //result = {"result": this.request.query};
-    //result = selector;
-    return result;  
-  }
 }
 
 clerkService = new ClerkService();
 clerkService.init();
+
+Meteor.methods({
+  test: function() {
+    var data = "this is a test";
+    var key = clerkService.store({"data":data});
+    console.log("testing to store "+data);
+    console.log(" and the key after storing is "+JSON.stringify(key));
+    var fetched = clerkService.fetch(key.key);
+    console.log(" and the data fetched is "+JSON.stringify(fetched));
+    fetched = clerkService.fetch("andthisAttemptShouldFail");
+    console.log(" and the data fetched is "+JSON.stringify(fetched));
+  }  
+});
+
 
