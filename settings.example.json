@@ -1,0 +1,9 @@
+{
+  "public": {
+    "BRAINTREE_MERCHANT_ID": "xxxxxxxxxxxxxxxx",
+    "BRAINTREE_PUBLIC_KEY": "xxxxxxxxxxxxxxxx"
+  },
+  "private": {
+    "BRAINTREE_PRIVATE_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  }
+}

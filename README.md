@@ -1,34 +1,64 @@
-clerk
-=======
+**Clerk** is about data objects. `Bob` provides a data object to Clerk for
+storage, and gets back a random key. `Bob` hands that key to `Alice`. `Alice`
+provides the key to Clerk, and retrieves the data object.
 
-Clerk stores stuff for anyone and gets it back to whoever has the claim ticket
+#### INSTALL THE DEPENDENCIES
 
-Use clerk at clerk.meteor.com to cache data for another app or to give to someone. 
+    npm install
 
-Items are stored for 1 hour (that's the intention. For now the database stores items forever)
+#### CONFIGURE
 
-All the other app needs is the key  you provide.
+Create `settings.json` based on `settings.example.json`.
 
-Usage:
-to put something in a bucket and get a key back:
+    cp settings.example.json settings.json
 
-curl -X POST --data "data=hello" http://clerk.meteor.com/ 
+Edit `settings.json`.
 
-or
+#### RUN
 
-from the browser: clerk.meteor.com/?data=hello
+    npm start
 
-all the parameters sent in are stored and you get back a key that can retrieve them
+#### USE
 
-Should see a response like:
-{"key":"dKxCtHRvGZGgNMrxj"}
+Go to http://localhost:3000 to access the project's web site.
 
-to retrieve with a key:
+##API CALLS
 
-curl http://clerk.meteor.com/?key=[your key]
+1. `POST` `{base_url}/signin`  
+    * `Headers`  
+      * Content-Type : application/json
+      * Accept : application/json  
+    * `Parameters`
+      * username (String)
+      * password (String)
 
-e.g.
-curl http://clerk.meteor.com/?key=dKxCtHRvGZGgNMrxj  
+2. `POST` `{base_url}/signin`  
+    * `Headers`  
+      * Content-Type : application/json
+      * Accept : application/json
+      * Authorization: Bearer {jwt_token}
 
-#NOTE:
-The "key" attribute is used by clerk for looking up your bucket. So, if you want to store "key" then put it inside another object. E.g. {data: {key: thekey, mydata: {...} }}
+3. `POST` `{base_url}/store`  
+    * `Headers`  
+      * Content-Type : application/json if json object else the type of the binary
+      * Accept : application/json
+      * Authorization: Bearer {jwt_token}
+    * `Parameters`
+      * { 'key': 'value', ... } // Objects
+      * {binay file}  // Binaries
+
+4. `GET` `{base_url}/get/{key}`  
+    * `Headers`  
+      * Content-Type : application/json
+      * Accept : application/json
+      * Authorization: Bearer {jwt_token}
+      * update-field (OPTIONAL): true (When enabled the object is extended else it is replaced with the new one)
+
+5. `PUT` `{base_url}/update/{key}`  
+    * `Headers`  
+      * Content-Type : application/json if json object else the type of the binary
+      * Accept : application/json
+      * Authorization: Bearer {jwt_token}
+    * `Parameters`
+      * { 'key': 'value', ... } // Objects
+      * {binay file}  // Binaries

@@ -1,0 +1,73 @@
+<header>
+  <h1>Clerk</h1>
+  <login-buttons></login-buttons><br>
+  <span ng-show="$ctrl.loggedIn">Plan: <strong>{{ $ctrl.currentUser.profile.plan }}</strong></span><br>
+  <span ng-show="$ctrl.loggedIn">Download limit per data: <strong>{{ $ctrl.currentUser.profile.limit }}</strong></span>
+</header>
+
+<div class="" ng-show="$ctrl.loggedIn">
+  
+  <h1>Update profile info</h1>
+  <span id="msg"></span>
+  <form ng-submit="$ctrl.updateDownloadLimit(limit)">
+    <input type="text" ng-model="limit" placeholder="Update download limit per data" onkeypress='return event.charCode >= 48 && event.charCode <= 57'><button type="submit">Save</button>
+  </form>
+
+  <div class='caption'>DATA OBJECTS</div>
+
+  <table>
+    <tr>
+      <th>KEY</th>
+      <th>TYPE</th>
+      <th>EXPIRES AT</th>
+    </tr>
+    <tr ng-repeat="do in $ctrl.data_objects">
+      <td>{{ do.key }}</td>
+      <td>{{ do.type }}</td>
+      <td>{{ do.expires_at }}</td>
+    </tr>
+  </table>
+</div>
+
+<style type="text/css">
+  input[type="text"] {
+    width: 250px;
+    padding: 10px;
+    font-size: 15px;
+    border: none;
+    border-bottom: solid 2px #c9c9c9;
+    transition: border 0.3s;
+    outline: none;
+    margin-right: 20px;
+  }
+  input[type="text"]:focus,
+  input[type="text"].focus {
+    border-bottom: solid 2px #969696;
+  }
+  button {
+    display: inline-block;
+    margin: 0 10px 0 0;
+    font-size: 15px;
+    appearance: none;
+    box-shadow: none;
+    border-radius: 0;
+    color: #6496c8;
+    background: rgba(0,0,0,0);
+    border: solid 2px #6496c8;
+  }
+  button:hover{
+    border-color: #346392;
+    color: #346392;
+    cursor: pointer;
+  }
+  button:active{
+    border-color: #27496d;
+    color: #27496d;
+  }
+  button:focus {
+    outline: none
+  }
+  #msg{
+    color: red;
+  }
+</style>

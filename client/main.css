@@ -1,0 +1,25 @@
+body {
+  font-family: 'Courier New'
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th {
+  text-align: left;
+}
+
+table,
+td,
+th {
+  border: 1px solid #000000;
+}
+
+div.caption {
+  font-weight: bold;
+  font-size: 16px;
+  padding: 50px 0 0 0;
+}
